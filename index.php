@@ -100,7 +100,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
     <title>Attendance List</title>
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
     <link href="styles/style.css" rel="stylesheet">
-    
+    <script src="scripts/jQuery.js"></script>
 </head>
 
 <body>
@@ -167,5 +167,12 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
         </div>
     </div>
 </body>
+<!-- include the jQuery script -->
+ <script src="scripts/jQuery.js"></script>
+ <script>
+    $(()=>{
+    alert("it is working");
+    })
 
+ </script>
 </html>
