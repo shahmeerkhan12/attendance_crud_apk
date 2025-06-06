@@ -1,38 +1,6 @@
 <?php
-require 'config/db.php';
-
-// handle new user attendance
-
-if (isset($_POST['submit_attendance'])) {
-    $index_no = htmlspecialchars($_POST['index_no']);
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
-
-// checking for empty fields
-
-if(empty($index_no) || empty($name) || empty($email))
-{
-    header("Location: index.php?msg=All fields are required&type=error&index_no=".$index_no."&name=".$name."&email=".$email);
-    exit();
-}
-else 
-{
-    // complete the insertion into table
-    $query = "INSERT INTO attendance(index_no,full_name,email,arrival_time) VALUES ('$index_no','$name','$email',now());";
-
-    if(!$result = mysqli_query(mysql: $conn,query: $query)){
-        mysqli_error($conn);
-            header("Location: index.php?msg=An error occured while adding&type=error&index_no=".$index_no."&name=".$name."&email=".$email);
-    exit();
-        }else {
-        header("Location:index.php?msg=Attendance recorded successfully&type=success");
-        exit();
-    }
- }
-}
-// END IF   
-
-    // read/fetch from database
+require "./config/db.php";
+     // read/fetch from database
     $query = "SELECT id, index_no, full_name, email, arrival_time FROM attendance ORDER BY arrival_time DESC;";
 
     if(!$fetched_result = mysqli_query(mysql: $conn,query: $query)){
@@ -111,7 +79,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
 <?php endif; ?>
 <!-- <p style="color:white">Paragraph</p>   -->
     <div class="content-div">
-        <form action="#" method="post">
+        <form id="attendance_form" action="#" method="post">
             <h2><a href="index.php">Attendance List</a></h2>
              <div class="form-floating">
                 <input type="text" name="name" id="name" class="form-control" placeholder="Enter Your Name"
@@ -137,9 +105,9 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
              <!-- checkout if the update_id has been set: if not set() show the subimit else show the update_record button
               submit button -->
               <?php if(!isset($_GET['update_id'])): ?>
-                <button class="btn btn-lg mb-3 mt-3 btn-primary" type="submit" name="submit_attendance" value="Submit">submit_attendance</button>
+                <button class="btn btn-lg mb-3 mt-3 btn-primary" type="submit" name="submit_attendance" id="submit_attendance" value="Submit">submit_attendance</button>
               <?php else: ?>
-                <button class="btn btn-lg mb-3 mt-3 btn-primary" type="submit" name="update_attendance" value="Update">update_attendance</button>
+                <button class="btn btn-lg mb-3 mt-3 btn-primary" type="submit" name="update_attendance" id="update_attendance" value="Update">update_attendance</button>
               <?php endif; ?>
         </form>
         <!-- display section -->
@@ -157,7 +125,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                         <!-- send a fetch request to index.php, for the following variables through GET  -->
                         <a href="<?php echo "index.php?update_id=".$student['id']."&index_no=".$student['index_no']
                         .'&full_name='.$student['full_name'].'&email='.$student['email'].'&time='.$student['arrival_time'];
-                ?>" class="list-update">update</a>
+                ?>" class="list-update" >update</a>
                         <a href="<?php echo "index.php?delete_id=".$student['id'].'&time='.$student['arrival_time'];
                 ?> " class="list-delete">delete</a>
                     </section>
@@ -168,10 +136,16 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
     </div>
 </body>
 <!-- include the jQuery script -->
- <script src="scripts/jQuery.js"></script>
+ <script src="jQuery.js"></script>
  <script>
     $(()=>{
-    alert("it is working");
+        // handle the create action
+    $('#submit_attendance').click((event)=>{
+        event.preventDefault();
+        $.get("./server/handlecreate.php",$(attendance_form).serializeArray(),(result)=>{
+                $(body).html(result);
+        })
+    })
     })
 
  </script>
