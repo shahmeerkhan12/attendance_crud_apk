@@ -8,37 +8,7 @@ require "./config/db.php";
     }
 // END IF
 
-// **************||HANDLE UPDATE||**************************************//
-//handle UPDATE
-if (isset($_POST['update_attendance'])) {
-    $index_no = htmlspecialchars($_POST['index_no']);
-    $name = htmlspecialchars($_POST['name']);
-    $email = htmlspecialchars($_POST['email']);
 
-    $update_id = $_GET['update_id'];
-    $arrival_time =$_GET['time'];
-// checking for empty fields
-
-if(empty($index_no) || empty($name) || empty($email))
-{
-    header("Location: index.php?msg=All fields are required&type=error&index_no=".$index_no."&name=".$name."&email=".$email);
-    exit();
-}
-else 
-{
-    // complete the insertion into table
-    $query = "UPDATE attendance SET index_no='$index_no',full_name='$name',email='$email' WHERE id='$update_id' and arrival_time='$arrival_time';";
-
-    if(!$result = mysqli_query(mysql: $conn,query: $query)){
-        mysqli_error($conn);
-            header("Location: index.php?msg=An error occured while updating&type=error&index_no=".$index_no."&name=".$name."&email=".$email."&time=".$arrival_time);
-    exit();
-        }else {
-        header("Location:index.php?msg=Attendance updated successfully&type=success");
-        exit();
-    }
- }
-}
 // ///////|||HANDLE DELETE|||////////////////////////////////////////////////////////////////////////////
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -68,7 +38,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
     <title>Attendance List</title>
     <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
     <link href="styles/style.css" rel="stylesheet">
-    <script src="scripts/jQuery.js"></script>
+    <script src="jQuery.js"></script>
 </head>
 
 <body>
@@ -87,6 +57,18 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                                 >
                 <label for="name">enter your name</label>
             </div>
+            <!-- for update purpose only, they are hidden in the form -->
+             <div class="form-floating">
+                <input type="hidden" name="time" id="time" class="form-control"
+                        value="<?php echo isset($_GET['time']) ? $_GET['time'] : "" ; ?>"
+                                >
+            </div>
+             <div class="form-floating">
+                <input type="hidden" name="update_id" id="update_id" class="form-control"
+                        value="<?php echo isset($_GET['update_id']) ? $_GET['update_id'] : "" ; ?>"
+                                >
+            </div>
+            <!-- end FOR UPDATE PURPOSE -->
             <div class="form-floating">
                 <input
                 type="number"  name="index_no" class="form-control" id="index_no" placeholder="Enter Your Index_No"
@@ -125,9 +107,9 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                         <!-- send a fetch request to index.php, for the following variables through GET  -->
                         <a href="<?php echo "index.php?update_id=".$student['id']."&index_no=".$student['index_no']
                         .'&full_name='.$student['full_name'].'&email='.$student['email'].'&time='.$student['arrival_time'];
-                ?>" class="list-update" >update</a>
+                ?>" class="list-update update" >update</a>
                         <a href="<?php echo "index.php?delete_id=".$student['id'].'&time='.$student['arrival_time'];
-                ?> " class="list-delete">delete</a>
+                ?> " class="list-delete delete">delete</a>
                     </section>
                 </li>
                   <?php endwhile; ?>
@@ -142,11 +124,19 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
         // handle the create action
     $('#submit_attendance').click((event)=>{
         event.preventDefault();
-        $.get("./server/handlecreate.php",$(attendance_form).serializeArray(),(result)=>{
-                $(body).html(result);
+        $.post("./server/handle_create.php",$('#attendance_form').serializeArray(),(result)=>{
+                $('body').html(result);
+        })
+    });
+    //handle update_attendance
+    // part 1
+    $("a.update").click((event)=>{
+        event.preventDefault();
+        $.get(event.target.href,(result)=>{
+            $('body').html(result);
         })
     })
-    })
-
+    
+})
  </script>
 </html>
