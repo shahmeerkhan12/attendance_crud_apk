@@ -52,7 +52,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
         <form id="attendance_form" action="#" method="post">
             <h2><a href="index.php">Attendance List</a></h2>
              <div class="form-floating">
-                <input type="text" name="name" id="name" class="form-control" placeholder="Enter Your Name"
+                <input type="text" name="name" id="name" autocapitalize autocomplete class="form-control" placeholder="Enter Your Name"
                         value="<?php echo isset($_GET['full_name']) ? $_GET['full_name'] : "" ; ?>"
                                 >
                 <label for="name">enter your name</label>
@@ -64,7 +64,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                                 >
             </div>
              <div class="form-floating">
-                <input type="hidden" name="update_id" id="update_id" class="form-control"
+                <input type="hidden" name="update_id" id="update_id" autocapitalize autocomplete class="form-control"
                         value="<?php echo isset($_GET['update_id']) ? $_GET['update_id'] : "" ; ?>"
                                 >
             </div>
@@ -78,7 +78,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
              </div>
         
             <div class="form-floating">
-                <input type="email" name="email" class="form-control" id="email" placeholder="Enter Your Email"
+                <input type="email" name="email" class="form-control" id="email" autocomplete placeholder="Enter Your Email"
                 value="<?php echo isset($_GET['email']) ? $_GET['email'] : "" ; ?>"
                 >
                 <label for="email">enter your email</label>
@@ -134,9 +134,17 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
         event.preventDefault();
         $.get(event.target.href,(result)=>{
             $('body').html(result);
+            
+            // part 2
+            $('#update_attendance').click((event)=>{ 
+                event.preventDefault();
+                $.post('./server/handle_update.php',$('#attendance_form').serializeArray(),(result)=>{
+                    $('body').html(result);
+                })
+             })
         })
     })
-    
-})
+})    
+
  </script>
 </html>
