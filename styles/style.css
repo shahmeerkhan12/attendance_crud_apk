@@ -14,7 +14,7 @@ body {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   letter-spacing: 2px;
   word-spacing: 5px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 .msg-success {
   color: green;
@@ -25,8 +25,8 @@ body {
 .content-div {
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  margin-top: 30px;
+  align-items: flex-start;
+  margin-top: 10px;
 }
 
 form {
@@ -51,16 +51,14 @@ h2 a {
   background: linear-gradient(to right, white, grey, rgb(245, 245, 167));
   text-align: center;
   min-width: 200px;
-  max-width: fit-content;
-  border-radius: 25px;
-  margin: 30px 20px;
-  padding: 20px;
-  height: 600px;
+  border-radius: 5px;
+  margin: 10px 20px;
+  padding: 10px;
   overflow-y: scroll;
 }
 
 .attendance-list ul li {
-  margin: 20px 0px;
+  margin: 10px 0px;
   border: 2px solid #393535;
   border-radius: 30px;
   padding: 10px 20px;
@@ -69,11 +67,12 @@ h2 a {
   text-decoration: none;
 }
 .attendance-list .name,
-.email,
-.time {
+.attendance-list .email,
+.attendance-list .time {
   background: #efebeb;
   color: black;
   padding: 2px 0px;
+  text-overflow: hidden;
 }
 .list-update,
 .list-delete {

@@ -1,32 +1,13 @@
 <?php
-require "./config/db.php";
-     // read/fetch from database
-    $query = "SELECT id, index_no, full_name, email, arrival_time FROM attendance ORDER BY arrival_time DESC;";
 
+require "./config/db.php";
+
+    // read/fetch from database
+    $query = "SELECT id, index_no, full_name, email, arrival_time FROM attendance ORDER BY arrival_time DESC;";
     if(!$fetched_result = mysqli_query(mysql: $conn,query: $query)){
         exit("an error occured while fetching the records");
-    }
-// END IF
-
-
-// ///////|||HANDLE DELETE|||////////////////////////////////////////////////////////////////////////////
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $arrival_time = $_GET['time'];
-
-$query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arrival_time';";
-
-// execute the query ////////////
-  if(!$result = mysqli_query(mysql: $conn,query: $query)){
-        mysqli_error($conn);
-            header("Location: index.php?msg=An error occured while deleting&type=error");
-    exit();
-        }else {
-        header("Location:index.php?msg=Record deleted successfully&type=success");
-        exit();
-    }
-
 }
+
 ?>
 
 <!-- my html code -->
@@ -51,34 +32,34 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
     <div class="content-div">
         <form id="attendance_form" action="#" method="post">
             <h2><a href="index.php">Attendance List</a></h2>
-             <div class="form-floating">
-                <input type="text" name="name" id="name" autocapitalize autocomplete class="form-control" placeholder="Enter Your Name"
+            <div class="form-floating">
+                <input type="text" name="name" id="name"  class="form-control" 
                         value="<?php echo isset($_GET['full_name']) ? $_GET['full_name'] : "" ; ?>"
                                 >
                 <label for="name">enter your name</label>
             </div>
             <!-- for update purpose only, they are hidden in the form -->
-             <div class="form-floating">
+            <div class="form-floating">
                 <input type="hidden" name="time" id="time" class="form-control"
                         value="<?php echo isset($_GET['time']) ? $_GET['time'] : "" ; ?>"
                                 >
             </div>
              <div class="form-floating">
-                <input type="hidden" name="update_id" id="update_id" autocapitalize autocomplete class="form-control"
+                <input type="hidden" name="update_id" id="update_id"  class="form-control"
                         value="<?php echo isset($_GET['update_id']) ? $_GET['update_id'] : "" ; ?>"
                                 >
             </div>
             <!-- end FOR UPDATE PURPOSE -->
             <div class="form-floating">
                 <input
-                type="number"  name="index_no" class="form-control" id="index_no" placeholder="Enter Your Index_No"
+                type="number"  name="index_no" class="form-control" id="index_no" 
                 value="<?php echo isset($_GET['index_no']) ? $_GET['index_no'] : "" ; ?>"
                 >
                 <label for="index_no">enter your index_no</label>
              </div>
         
             <div class="form-floating">
-                <input type="email" name="email" class="form-control" id="email" autocomplete placeholder="Enter Your Email"
+                <input type="email" name="email" class="form-control" id="email" 
                 value="<?php echo isset($_GET['email']) ? $_GET['email'] : "" ; ?>"
                 >
                 <label for="email">enter your email</label>
@@ -104,10 +85,12 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                         <p class="time"><?php echo $student['arrival_time'];?></p>
                     </section>
                     <section class="list-buttons">
+
                         <!-- send a fetch request to index.php, for the following variables through GET  -->
                         <a href="<?php echo "index.php?update_id=".$student['id']."&index_no=".$student['index_no']
                         .'&full_name='.$student['full_name'].'&email='.$student['email'].'&time='.$student['arrival_time'];
                 ?>" class="list-update update" >update</a>
+
                         <a href="<?php echo "index.php?delete_id=".$student['id'].'&time='.$student['arrival_time'];
                 ?> " class="list-delete delete">delete</a>
                     </section>
@@ -122,7 +105,7 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
  <script>
     $(()=>{
         // handle the create action
-    $('#submit_attendance').click((event)=>{
+        $('#submit_attendance').click((event)=>{
         event.preventDefault();
         $.post("./server/handle_create.php",$('#attendance_form').serializeArray(),(result)=>{
                 $('body').html(result);
@@ -143,7 +126,17 @@ $query = "DELETE FROM attendance where id='$delete_id' and arrival_time='$arriva
                 })
              })
         })
-    })
+    });//end-update-attendance 
+    //handle delete operation
+      $("a.delete").click((event)=>{
+            event.preventDefault();
+            console.log(event.target.search);
+
+            $.get('./server/handle_delete.php'+ event.target.search,(result)=>{
+                $('body').html(result);
+            })
+
+        });
 })    
 
  </script>
