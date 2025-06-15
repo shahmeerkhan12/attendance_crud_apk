@@ -137,6 +137,13 @@ require "./config/db.php";
             })
 
         });
+
+        //Fadeout messages(notification)
+        $('#msg').ready( ()=>{
+            setTimeout(() => {
+                  $('#msg').fadeOut(500);
+            }, 2000)
+    })
 })    
 
  </script>
