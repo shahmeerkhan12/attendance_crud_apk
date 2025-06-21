@@ -1,0 +1,33 @@
+# 01: Goto the Xampp directory (usually located in the c: directory)
+
+cd xampp
+
+# 02: then goto mysql/bin (this is from where can control view and crud the databases)
+
+cd mysql/bin
+
+# 03: to access the databases, you must go with a login credentials (root is the default user here!!)
+
+mysql -u root
+
+# 04: check if you have access to the databases with the given credentials: type the following to see the databases; put semicolon at the end
+
+show databases;
+
+# 05: from the given list pick the desired databases and play around with it (type 'use your_db_name')
+
+use php_crud_apk;
+
+# 06: show tables
+
+show tables
+
+# 07: select all from a table and also you can see the description of the tables
+
+select \* from table_name
+
+desc table_name
+
+# 08: you can create new tables by:
+
+create table table_name (id int auto_increment,full_name varchar(200) not null, primary key(id));
